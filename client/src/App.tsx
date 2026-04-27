@@ -12,7 +12,7 @@ import ContactPage from './pages/Contact'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/haiyuanhui">
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
