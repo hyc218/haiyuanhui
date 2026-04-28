@@ -13,7 +13,7 @@
   --color-tea: #8b7355;
   --color-charcoal: #333333;
   --font-serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  --font-sans: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
 * {
@@ -22,18 +22,24 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--color-paper);
   color: var(--color-charcoal);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
 }
 
-/* 自定义滚动条 */
+/* ============ 自定义滚动条 ============ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -45,98 +51,115 @@ h1, h2, h3, h4 {
   border-radius: 3px;
 }
 
-/* ============ 水墨动画 ============ */
-@keyframes inkDrop {
-  0% { transform: scaleY(0); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: scaleY(1); opacity: 0.8; }
+/* ============ Apple 风格动画 ============ */
+
+/* 视差滚动淡入 */
+@keyframes parallaxFadeIn {
+  from { opacity: 0; transform: translateY(60px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes float {
+/* 精致上浮 */
+@keyframes floatUp {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-6px); }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes inkSpread {
-  0% { transform: scale(0); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 0; }
-}
-
+/* 微光扫过 */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 
+/* 水墨晕染 - 更细腻 */
+@keyframes inkSpread {
+  0% { transform: scale(0); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* 脉冲呼吸 */
+@keyframes breathe {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* 滚动触发渐入 */
 @keyframes scrollReveal {
-  from { opacity: 0; transform: translateY(40px); }
+  from { opacity: 0; transform: translateY(50px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes brushStroke {
+/* 文字渐入（逐字效果） */
+@keyframes textReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* 边框生长 */
+@keyframes borderGrow {
   from { width: 0; }
   to { width: 100%; }
 }
 
-/* 毛笔笔触动画 */
-@keyframes brushIn {
-  0% { clip-path: inset(0 100% 0 0); }
-  100% { clip-path: inset(0 0 0 0); }
+/* 缩放淡入 */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.animate-ink-drop {
-  animation: inkDrop 1.5s ease-out forwards;
+/* 模糊渐入 */
+@keyframes blurIn {
+  from { opacity: 0; filter: blur(10px); transform: translateY(20px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
+/* 旋转印章 */
+@keyframes sealStamp {
+  0% { transform: rotate(-15deg) scale(0.5); opacity: 0; }
+  60% { transform: rotate(3deg) scale(1.1); opacity: 1; }
+  100% { transform: rotate(-3deg) scale(1); opacity: 1; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+/* Utility Classes */
+.animate-parallax-fade {
+  animation: parallaxFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse 3s ease-in-out infinite;
-}
-
-.animate-ink-spread {
-  animation: inkSpread 2s ease-out forwards;
+.animate-float-up {
+  animation: floatUp 4s ease-in-out infinite;
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.08), transparent);
   background-size: 200% 100%;
   animation: shimmer 3s ease-in-out infinite;
 }
 
-.animate-brush-in {
-  animation: brushIn 1.2s ease-out forwards;
+.animate-ink-spread {
+  animation: inkSpread 2.5s ease-out forwards;
 }
 
-/* 滚动触发动画 */
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-blur-in {
+  animation: blurIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-seal-stamp {
+  animation: sealStamp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============ 滚动触发动画 ============ */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.8s ease-out;
+  transform: translateY(50px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.visible {
@@ -144,28 +167,39 @@ h1, h2, h3, h4 {
   transform: translateY(0);
 }
 
-/* 毛玻璃效果 */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============ Apple 风格毛玻璃 ============ */
 .glass {
-  background: rgba(250, 248, 245, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(250, 248, 245, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .glass-dark {
-  background: rgba(26, 26, 46, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(26, 26, 46, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
-/* 金色渐变文字 */
+/* ============ 金色渐变文字 ============ */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #c9a96e, #dcc28a, #c9a96e);
+  background: linear-gradient(135deg, #c9a96e 0%, #e8d5a3 40%, #c9a96e 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* 中式印章效果 */
+/* ============ 中式印章效果 ============ */
 .seal {
   display: inline-flex;
   align-items: center;
@@ -174,23 +208,24 @@ h1, h2, h3, h4 {
   color: var(--color-cinnabar);
   font-family: var(--font-serif);
   transform: rotate(-3deg);
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .seal:hover {
   transform: rotate(0deg) scale(1.05);
+  box-shadow: 0 0 20px rgba(194, 59, 34, 0.2);
 }
 
-/* 笔触分隔线 */
+/* ============ 笔触分隔线 ============ */
 .brush-divider {
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    var(--color-gold) 20%, 
-    var(--color-gold) 80%, 
+    var(--color-gold) 15%, 
+    var(--color-gold) 85%, 
     transparent 100%
   );
-  border-radius: 2px;
+  border-radius: 1px;
   position: relative;
   overflow: hidden;
 }
@@ -204,33 +239,111 @@ h1, h2, h3, h4 {
   width: 100%;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(255,255,255,0.3) 50%, 
+    rgba(255,255,255,0.4) 50%, 
     transparent 100%
   );
-  animation: shimmer 2s ease-in-out infinite;
+  animation: shimmer 2.5s ease-in-out infinite;
 }
 
-/* 卡片悬停效果增强 */
+/* ============ 卡片悬停 - Apple 风格 ============ */
 .card-hover {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
-/* 水墨背景圆 */
+/* ============ 水墨背景圆 ============ */
 .ink-circle {
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(201, 169, 110, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.12) 0%, transparent 70%);
 }
 
-/* 滚动条隐藏 */
+/* ============ 滚动条隐藏 ============ */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ============ 图片占位渐变 ============ */
+.img-placeholder {
+  background: linear-gradient(135deg, var(--color-ink-light) 0%, var(--color-ink) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: shimmer 2s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+/* ============ 数字滚动效果 ============ */
+.stat-number {
+  font-feature-settings: "tnum";
+}
+
+/* ============ 按钮 Apple 风格 ============ */
+.btn-apple {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-apple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-apple:hover::after {
+  opacity: 1;
+}
+
+.btn-apple:active {
+  transform: scale(0.97);
+}
+
+/* ============ 导航链接悬停效果 ============ */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: var(--color-cinnabar);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+/* ============ 全屏视频/图片占位 ============ */
+.hero-gradient {
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 30%, #2d2d44 60%, #1a1a2e 100%);
+}
+
+/* ============ 分隔线装饰 ============ */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  opacity: 0.3;
 }

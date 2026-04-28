@@ -1,8 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+function useRevealOnScroll() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+    document.querySelectorAll('.reveal, .reveal-scale').forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+}
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+
+  useRevealOnScroll()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -11,17 +30,26 @@ export default function ContactPage() {
 
   return (
     <div className="pt-20 min-h-screen bg-paper">
-      {/* Header */}
-      <section className="py-16 bg-gradient-to-br from-ink via-ink-light to-ink relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-20 w-48 h-48 border border-gold/20 rounded-full" />
-          <div className="absolute bottom-10 left-20 w-32 h-32 border border-gold/10 rounded-full" />
-          <div className="absolute top-1/2 left-1/3 w-48 h-48 ink-circle" />
+      {/* Header - Apple 风格 */}
+      <section className="relative py-24 overflow-hidden hero-gradient">
+        <div className="absolute inset-0 opacity-[0.04]">
+          <div className="absolute top-10 right-1/4 w-64 h-64 border border-gold/20 rounded-full" />
+          <div className="absolute bottom-10 left-1/4 w-48 h-48 border border-gold/10 rounded-full" />
+          <div className="absolute top-1/2 left-1/3 w-80 h-80 ink-circle animate-breathe" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif text-paper mb-4 tracking-wider">联系我们</h1>
-          <div className="brush-divider w-16 mx-auto mb-4" />
-          <p className="text-paper/60 text-sm tracking-wider">CONTACT US</p>
+          <div className="mb-6 animate-blur-in">
+            <div className="w-14 h-14 mx-auto bg-gold/[0.08] rounded-full flex items-center justify-center border border-gold/[0.15] backdrop-blur-sm">
+              <span className="text-gold font-serif text-2xl">联</span>
+            </div>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-serif text-paper mb-4 tracking-wider animate-blur-in font-light" style={{ animationDelay: '0.1s' }}>
+            联系我们
+          </h1>
+          <div className="brush-divider w-16 mx-auto mb-4 animate-scale-in" style={{ animationDelay: '0.2s' }} />
+          <p className="text-paper/40 text-sm tracking-[0.3em] animate-blur-in font-light" style={{ animationDelay: '0.3s' }}>
+            GET IN TOUCH
+          </p>
         </div>
       </section>
 
@@ -30,7 +58,8 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Info */}
             <div className="reveal">
-              <h2 className="text-3xl font-serif text-ink mb-8 tracking-wider">联系方式</h2>
+              <span className="text-xs text-tea/60 tracking-[0.3em] uppercase mb-4 block">Information</span>
+              <h2 className="text-3xl md:text-4xl font-serif text-ink mb-8 tracking-wider font-light">联系方式</h2>
               <div className="space-y-8">
                 {[
                   {
@@ -72,12 +101,12 @@ export default function ContactPage() {
                   }
                 ].map((info, index) => (
                   <div key={index} className="flex items-start space-x-4 group">
-                    <div className="w-12 h-12 bg-paper-dark rounded-xl flex items-center justify-center text-gold flex-shrink-0 group-hover:bg-cinnabar group-hover:text-white transition-all duration-300">
+                    <div className="w-12 h-12 bg-paper-dark rounded-2xl flex items-center justify-center text-gold flex-shrink-0 group-hover:bg-cinnabar group-hover:text-white transition-all duration-500">
                       {info.icon}
                     </div>
-                    <div>
-                      <h3 className="text-sm text-tea tracking-wider mb-1">{info.title}</h3>
-                      <p className="text-ink">{info.content}</p>
+                    <div className="pt-1">
+                      <h3 className="text-sm text-tea/60 tracking-wider mb-1">{info.title}</h3>
+                      <p className="text-ink font-light">{info.content}</p>
                     </div>
                   </div>
                 ))}
@@ -86,19 +115,20 @@ export default function ContactPage() {
 
             {/* Message Form */}
             <div className="reveal">
-              <h2 className="text-3xl font-serif text-ink mb-8 tracking-wider">在线留言</h2>
+              <span className="text-xs text-tea/60 tracking-[0.3em] uppercase mb-4 block">Message</span>
+              <h2 className="text-3xl md:text-4xl font-serif text-ink mb-8 tracking-wider font-light">在线留言</h2>
               {submitted ? (
-                <div className="bg-paper-dark rounded-2xl p-12 text-center">
-                  <div className="w-20 h-20 bg-jade/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="bg-paper-dark/50 rounded-3xl p-12 text-center border border-gold/5">
+                  <div className="w-20 h-20 bg-jade/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg className="w-10 h-10 text-jade" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-serif text-ink mb-2 tracking-wider">留言已发送</h3>
-                  <p className="text-sm text-tea">感谢您的留言，我们会尽快回复！</p>
+                  <p className="text-sm text-tea/70 font-light">感谢您的留言，我们会尽快回复！</p>
                   <button
                     onClick={() => { setSubmitted(false); setForm({ name: '', email: '', message: '' }) }}
-                    className="mt-6 px-6 py-2 border border-gold text-gold rounded-lg hover:bg-gold/10 transition-colors text-sm tracking-wider"
+                    className="mt-6 px-6 py-2.5 border border-gold/40 text-gold rounded-full hover:bg-gold/5 transition-all text-sm tracking-wider"
                   >
                     继续留言
                   </button>
@@ -106,41 +136,41 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label className="block text-sm text-tea mb-2 tracking-wider">姓名</label>
+                    <label className="block text-sm text-tea/60 mb-2 tracking-wider">姓名</label>
                     <input
                       type="text"
                       required
                       value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-paper-dark rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+                      className="w-full px-5 py-3.5 bg-paper-dark/50 rounded-2xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all border border-gold/5"
                       placeholder="请输入您的姓名"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-tea mb-2 tracking-wider">邮箱</label>
+                    <label className="block text-sm text-tea/60 mb-2 tracking-wider">邮箱</label>
                     <input
                       type="email"
                       required
                       value={form.email}
                       onChange={e => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-paper-dark rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+                      className="w-full px-5 py-3.5 bg-paper-dark/50 rounded-2xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all border border-gold/5"
                       placeholder="请输入您的邮箱"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-tea mb-2 tracking-wider">留言内容</label>
+                    <label className="block text-sm text-tea/60 mb-2 tracking-wider">留言内容</label>
                     <textarea
                       required
                       value={form.message}
                       onChange={e => setForm({ ...form, message: e.target.value })}
-                      className="w-full px-4 py-3 bg-paper-dark rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none transition-all"
+                      className="w-full px-5 py-3.5 bg-paper-dark/50 rounded-2xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/20 resize-none transition-all border border-gold/5"
                       rows={6}
                       placeholder="请输入您的留言内容..."
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-4 bg-cinnabar text-white rounded-xl hover:bg-cinnabar-light transition-colors tracking-wider text-sm shadow-md shadow-cinnabar/20"
+                    className="w-full py-4 bg-cinnabar text-white rounded-2xl hover:bg-cinnabar-light transition-all tracking-wider text-sm shadow-md shadow-cinnabar/20 btn-apple"
                   >
                     发送留言
                   </button>
@@ -151,21 +181,29 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Placeholder */}
+      {/* Map Section */}
       <section className="pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-ink-light to-ink rounded-3xl h-80 flex items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-10 right-10 w-48 h-48 border border-gold/20 rounded-full" />
-              <div className="absolute bottom-10 left-10 w-32 h-32 border border-gold/10 rounded-full" />
-            </div>
-            <div className="text-center relative z-10">
-              <svg className="w-16 h-16 mx-auto text-gold/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              <p className="text-gold font-serif text-lg tracking-wider mb-2">海源荟</p>
-              <p className="text-sm text-paper/50">上海市黄浦区南京东路100号海源大厦3层</p>
-              <p className="text-xs text-paper/30 mt-1">周一至周日 11:00 - 22:00</p>
+          <div className="relative rounded-3xl overflow-hidden h-96">
+            <img
+              src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&h=500&fit=crop"
+              alt="上海地图"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute bottom-8 left-8">
+              <div className="flex items-center space-x-3 mb-2">
+                <div className="w-10 h-10 bg-cinnabar rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-white font-serif text-lg tracking-wider">海源荟</p>
+                  <p className="text-white/50 text-xs">上海市黄浦区南京东路100号海源大厦3层</p>
+                </div>
+              </div>
+              <p className="text-white/30 text-xs mt-2">周一至周日 11:00 - 22:00</p>
             </div>
           </div>
         </div>
