@@ -4,38 +4,22 @@ import { menuData } from '../data/menuData'
 
 const features = [
   {
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    icon: '鲜',
     title: '新鲜食材',
     desc: '每日精选当季食材，从农场到餐桌'
   },
   {
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-      </svg>
-    ),
+    icon: '匠',
     title: '匠心烹饪',
     desc: '传承经典技艺，创新现代风味'
   },
   {
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
+    icon: '境',
     title: '雅致环境',
     desc: '新中式装修风格，私密用餐空间'
   },
   {
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-      </svg>
-    ),
+    icon: '礼',
     title: '星级服务',
     desc: '专业侍者团队，贴心周到服务'
   }
@@ -85,7 +69,7 @@ function useRevealOnScroll() {
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     )
 
-    document.querySelectorAll('.reveal, .reveal-scale').forEach(el => observer.observe(el))
+    document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right').forEach(el => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 }
@@ -122,102 +106,128 @@ export default function Home() {
 
   return (
     <div>
-      {/* ============ HERO SECTION - Apple 风格全屏 ============ */}
-      <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden hero-gradient">
-        {/* 动态粒子背景 */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-[0.03]">
-            <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] ink-circle animate-breathe" />
-            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] ink-circle animate-breathe" style={{ animationDelay: '2s' }} />
-          </div>
-          
-          {/* 装饰性圆环 - 鼠标视差 */}
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-gold/[0.06] rounded-full transition-transform duration-700 ease-out"
-            style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -20}px, ${mousePos.y * -20}px)` }}
-          />
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-gold/[0.04] rounded-full transition-transform duration-700 ease-out"
-            style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)` }}
-          />
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] border border-gold/[0.08] rounded-full transition-transform duration-700 ease-out"
-            style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -40}px, ${mousePos.y * -40}px)` }}
-          />
+      {/* ============ HERO SECTION - 东方意境 ============ */}
+      <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* 深色水墨渐变背景 */}
+        <div className="absolute inset-0 hero-gradient" />
+        
+        {/* 动态金箔粒子 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-gold/30 rounded-full animate-gold-fall"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * -20}%`,
+                animationDelay: `${Math.random() * 8}s`,
+                animationDuration: `${6 + Math.random() * 6}s`,
+                width: `${1 + Math.random() * 3}px`,
+                height: `${1 + Math.random() * 3}px`,
+                opacity: 0.2 + Math.random() * 0.3
+              }}
+            />
+          ))}
+        </div>
 
-          {/* 水墨晕染粒子 */}
-          <div className="absolute inset-0 overflow-hidden">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-40 h-40 rounded-full bg-gold/[0.04] animate-ink-spread"
-                style={{
-                  left: `${10 + i * 12}%`,
-                  top: `${15 + (i % 4) * 25}%`,
-                  animationDelay: `${i * 0.8}s`,
-                  animationDuration: '4s'
-                }}
-              />
-            ))}
-          </div>
+        {/* 装饰性圆环 - 鼠标视差 */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border border-gold/[0.06] rounded-full transition-transform duration-700 ease-out"
+          style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -15}px, ${mousePos.y * -15}px)` }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-gold/[0.04] rounded-full transition-transform duration-700 ease-out"
+          style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -25}px, ${mousePos.y * -25}px)` }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-gold/[0.08] rounded-full transition-transform duration-700 ease-out"
+          style={{ transform: `translate(-50%, -50%) translate(${mousePos.x * -35}px, ${mousePos.y * -35}px)` }}
+        />
+
+        {/* 水墨晕染 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] ink-circle animate-breathe" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] ink-circle animate-breathe" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] ink-circle animate-breathe" style={{ animationDelay: '4s' }} />
         </div>
 
         {/* 内容 */}
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          {/* Logo 动画 */}
+          {/* 中式印章Logo */}
           <div className="mb-10 animate-blur-in">
-            <div className="w-20 h-20 mx-auto bg-gold/[0.08] rounded-full flex items-center justify-center border border-gold/[0.15] backdrop-blur-sm">
-              <span className="text-gold font-serif text-4xl">海</span>
+            <div className="seal w-16 h-16 mx-auto text-lg">
+              海
             </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-paper mb-6 tracking-[0.15em] animate-blur-in font-light" style={{ animationDelay: '0.1s' }}>
+          <h1 
+            className="text-5xl md:text-7xl lg:text-8xl font-serif text-paper mb-4 tracking-[0.15em] animate-blur-in font-light"
+            style={{ animationDelay: '0.1s' }}
+          >
             海源荟
           </h1>
-          <p className="text-lg md:text-xl text-gradient-gold font-serif mb-3 tracking-[0.3em] animate-blur-in" style={{ animationDelay: '0.2s' }}>
+          <p 
+            className="text-base md:text-lg text-gradient-gold font-serif mb-2 tracking-[0.3em] animate-blur-in"
+            style={{ animationDelay: '0.2s' }}
+          >
             HAIYUANHUI
           </p>
-          <div className="w-12 h-[1px] bg-gold/30 mx-auto mb-6 animate-scale-in" style={{ animationDelay: '0.3s' }} />
-          <p className="text-base text-paper/50 mb-12 max-w-xl mx-auto leading-relaxed tracking-wide animate-blur-in font-light" style={{ animationDelay: '0.4s' }}>
+          
+          {/* 中式分隔线 */}
+          <div className="flex items-center justify-center gap-3 mb-6 animate-scale-in" style={{ animationDelay: '0.3s' }}>
+            <div className="w-12 h-[1px] bg-gold/30" />
+            <div className="w-2 h-2 rotate-45 border border-gold/40" />
+            <div className="w-12 h-[1px] bg-gold/30" />
+          </div>
+          
+          <p 
+            className="text-sm md:text-base text-paper/50 mb-14 max-w-xl mx-auto leading-relaxed tracking-wider animate-blur-in font-light"
+            style={{ animationDelay: '0.4s' }}
+          >
             以海纳百川之胸怀，汇聚天下珍馐美味
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-blur-in" style={{ animationDelay: '0.6s' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-blur-in" style={{ animationDelay: '0.6s' }}>
             <Link
               to="/menu"
-              className="group relative px-8 py-3.5 overflow-hidden rounded-full tracking-wider text-sm btn-apple"
+              className="group relative px-10 py-4 overflow-hidden tracking-wider text-sm"
             >
-              <div className="absolute inset-0 bg-paper group-hover:bg-white transition-colors duration-500" />
-              <span className="relative text-ink font-medium">探索菜单</span>
+              <div className="absolute inset-0 bg-paper group-hover:bg-white transition-colors duration-500 rounded-full" />
+              <span className="relative text-ink font-medium z-10">探索菜单</span>
+              <div className="absolute inset-0 rounded-full border border-paper/20 group-hover:border-transparent transition-colors duration-500" />
             </Link>
             <Link
               to="/reservation"
-              className="group relative px-8 py-3.5 overflow-hidden rounded-full tracking-wider text-sm border border-paper/20 hover:border-paper/40 transition-all duration-500 btn-apple"
+              className="group relative px-10 py-4 overflow-hidden tracking-wider text-sm"
             >
-              <div className="absolute inset-0 bg-paper/0 group-hover:bg-paper/[0.05] transition-colors duration-500" />
-              <span className="relative text-paper/80 group-hover:text-paper transition-colors duration-500">预约订座</span>
+              <div className="absolute inset-0 rounded-full border border-paper/30 group-hover:border-paper/60 transition-all duration-500" />
+              <div className="absolute inset-0 bg-paper/0 group-hover:bg-paper/[0.06] transition-colors duration-500 rounded-full" />
+              <span className="relative text-paper/80 group-hover:text-paper transition-colors duration-500 z-10">预约订座</span>
             </Link>
           </div>
         </div>
 
         {/* 滚动指示器 */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 animate-float-up">
-          <span className="text-xs text-paper/30 tracking-[0.2em]">SCROLL</span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-gold/40 to-transparent" />
+          <span className="text-[10px] text-paper/25 tracking-[0.25em]">SCROLL</span>
+          <div className="w-[1px] h-10 bg-gradient-to-b from-gold/30 to-transparent" />
         </div>
       </section>
 
-      {/* ============ STATS SECTION - 极简风格 ============ */}
-      <section className="py-20 bg-ink relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute top-0 left-1/3 w-96 h-96 border border-gold/20 rounded-full" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 border border-gold/10 rounded-full" />
+      {/* ============ STATS SECTION ============ */}
+      <section className="py-24 bg-ink relative overflow-hidden">
+        {/* 装饰 */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div className="absolute top-10 left-1/4 w-80 h-80 border border-gold/20 rounded-full" />
+          <div className="absolute bottom-10 right-1/4 w-60 h-60 border border-gold/10 rounded-full" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {stats.map((stat, index) => (
               <div key={index} className="text-center reveal">
                 <p className="text-4xl md:text-5xl font-serif text-gold mb-2 stat-number font-light">{stat.number}</p>
+                {/* 小分隔 */}
+                <div className="w-8 h-[1px] bg-gold/20 mx-auto mb-3" />
                 <p className="text-xs text-paper/40 tracking-[0.2em] uppercase">{stat.label}</p>
               </div>
             ))}
@@ -226,25 +236,35 @@ export default function Home() {
       </section>
 
       {/* ============ FEATURES SECTION ============ */}
-      <section className="py-28 bg-paper">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-28 bg-paper relative">
+        {/* 宣纸纹理背景 */}
+        <div className="absolute inset-0 paper-texture opacity-30" />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 reveal">
             <span className="text-xs text-tea/60 tracking-[0.3em] uppercase mb-4 block">Why Choose Us</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-ink mb-4 tracking-wider font-light">至臻体验</h2>
-            <div className="brush-divider w-16 mx-auto" />
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-12 h-[1px] bg-gold/40" />
+              <div className="w-2 h-2 rotate-45 border border-gold/50" />
+              <div className="w-12 h-[1px] bg-gold/40" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group text-center p-10 bg-paper-dark/50 rounded-3xl card-hover reveal"
+                className="group text-center p-10 bg-paper-dark/50 rounded-3xl reveal card-chinese"
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
-                <div className="w-14 h-14 mx-auto mb-6 bg-paper rounded-2xl flex items-center justify-center text-gold group-hover:bg-cinnabar group-hover:text-white group-hover:shadow-lg group-hover:shadow-cinnabar/20 transition-all duration-500">
-                  {feature.icon}
+                {/* 中式圆形图标 */}
+                <div className="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-gold/30 flex items-center justify-center group-hover:border-cinnabar group-hover:bg-cinnabar/5 transition-all duration-500">
+                  <span className="text-xl font-serif text-gold group-hover:text-cinnabar transition-colors duration-500">{feature.icon}</span>
                 </div>
                 <h3 className="text-lg font-serif text-ink mb-3 tracking-wider">{feature.title}</h3>
+                {/* 装饰点 */}
+                <div className="w-6 h-[1px] bg-gold/20 mx-auto mb-3" />
                 <p className="text-sm text-tea/70 leading-relaxed font-light">{feature.desc}</p>
               </div>
             ))}
@@ -253,41 +273,54 @@ export default function Home() {
       </section>
 
       {/* ============ RECOMMENDED DISHES ============ */}
-      <section className="py-28 bg-paper-dark/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-28 bg-paper-dark/30 relative">
+        <div className="absolute inset-0 opacity-[0.015]">
+          <div className="absolute top-20 right-20 w-96 h-96 border border-gold/20 rounded-full" />
+          <div className="absolute bottom-20 left-20 w-72 h-72 border border-gold/10 rounded-full" />
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 reveal">
             <span className="text-xs text-tea/60 tracking-[0.3em] uppercase mb-4 block">Signature Dishes</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-ink mb-4 tracking-wider font-light">招牌推荐</h2>
-            <div className="brush-divider w-16 mx-auto mb-4" />
-            <p className="text-tea/60 text-sm tracking-wider font-light">主厨精选，不容错过</p>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gold/40" />
+              <div className="w-2 h-2 rotate-45 border border-gold/50" />
+              <div className="w-12 h-[1px] bg-gold/40" />
+            </div>
+            <p className="text-tea/60 text-sm tracking-wider font-light">主厨精选 · 不容错过</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
             {recommended.map((item, index) => (
               <div
                 key={item.id}
-                className="group bg-paper rounded-3xl overflow-hidden card-hover reveal"
+                className="group bg-paper rounded-2xl overflow-hidden reveal card-chinese"
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
-                <div className="relative h-72 img-placeholder flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 opacity-[0.08]">
-                    <div className="absolute top-6 right-6 w-40 h-40 border border-gold/30 rounded-full" />
-                    <div className="absolute -bottom-10 -left-10 w-56 h-56 border border-gold/10 rounded-full" />
+                {/* 图片区 */}
+                <div className="relative h-64 img-placeholder flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 opacity-[0.06]">
+                    <div className="absolute top-4 right-4 w-32 h-32 border border-gold/30 rounded-full" />
+                    <div className="absolute -bottom-8 -left-8 w-48 h-48 border border-gold/10 rounded-full" />
                   </div>
                   <div className="text-center z-10 group-hover:scale-110 transition-transform duration-700 ease-out">
-                    <div className="text-7xl mb-4 opacity-80">{item.emoji}</div>
-                    <p className="text-gold font-serif text-lg tracking-wider">{item.name}</p>
+                    <div className="text-6xl mb-3 opacity-80">{item.emoji}</div>
+                    <p className="text-gold font-serif text-base tracking-wider">{item.name}</p>
                     <p className="text-paper/30 text-xs mt-1 tracking-wider">{item.nameEn}</p>
                   </div>
-                  <div className="absolute top-5 left-5 px-3 py-1 bg-paper/10 backdrop-blur-md text-paper/80 text-xs rounded-full tracking-wider border border-paper/10">
-                    ★ 招牌
+                  {/* 印章标签 */}
+                  <div className="absolute top-5 left-5 seal-sm">
+                    <span className="text-[10px]">主厨推荐</span>
                   </div>
                 </div>
+                {/* 内容区 */}
                 <div className="p-8">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-serif text-ink tracking-wider">{item.name}</h3>
-                    <span className="text-cinnabar font-serif text-xl">¥{item.price}</span>
+                    <span className="text-cinnabar font-serif text-xl font-light">¥{item.price}</span>
                   </div>
+                  <div className="w-full h-[1px] bg-gold/10 mb-3" />
                   <p className="text-sm text-tea/70 leading-relaxed line-clamp-2 font-light">{item.description}</p>
                 </div>
               </div>
@@ -297,7 +330,7 @@ export default function Home() {
           <div className="text-center mt-16 reveal">
             <Link
               to="/menu"
-              className="group inline-flex items-center space-x-2 px-8 py-3.5 border border-gold/40 text-gold rounded-full hover:bg-gold/[0.06] transition-all duration-500 tracking-wider text-sm"
+              className="group inline-flex items-center space-x-3 px-10 py-4 border border-gold/40 text-gold rounded-full hover:bg-gold/[0.06] hover:border-gold/60 transition-all duration-500 tracking-wider text-sm"
             >
               <span>查看完整菜单</span>
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -310,6 +343,7 @@ export default function Home() {
 
       {/* ============ TESTIMONIALS SECTION ============ */}
       <section className="py-28 bg-paper relative overflow-hidden">
+        <div className="absolute inset-0 paper-texture opacity-20" />
         <div className="absolute inset-0 opacity-[0.02]">
           <div className="absolute top-20 right-20 w-80 h-80 border border-gold/20 rounded-full" />
           <div className="absolute bottom-20 left-20 w-60 h-60 border border-gold/10 rounded-full" />
@@ -318,19 +352,30 @@ export default function Home() {
           <div className="text-center mb-16 reveal">
             <span className="text-xs text-tea/60 tracking-[0.3em] uppercase mb-4 block">Testimonials</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-ink mb-4 tracking-wider font-light">食客心声</h2>
-            <div className="brush-divider w-16 mx-auto mb-4" />
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gold/40" />
+              <div className="w-2 h-2 rotate-45 border border-gold/50" />
+              <div className="w-12 h-[1px] bg-gold/40" />
+            </div>
             <p className="text-tea/60 text-sm tracking-wider font-light">来自真实顾客的评价</p>
           </div>
 
           <div className="max-w-3xl mx-auto">
             <div className="relative reveal">
-              {/* 评价卡片 */}
-              <div className="bg-paper-dark/50 backdrop-blur-sm rounded-3xl p-10 md:p-14 shadow-sm border border-gold/5">
+              {/* 卷轴风格评价卡片 */}
+              <div className="bg-paper-dark/50 backdrop-blur-sm rounded-3xl p-10 md:p-14 border border-gold/10 shadow-sm">
+                {/* 顶部装饰 */}
+                <div className="flex items-center justify-center gap-2 mb-8">
+                  <div className="w-8 h-[1px] bg-gold/20" />
+                  <div className="w-1.5 h-1.5 rotate-45 border border-gold/30" />
+                  <div className="w-8 h-[1px] bg-gold/20" />
+                </div>
+                
                 <div className="text-center">
-                  {/* 引号装饰 */}
-                  <div className="text-6xl text-gold/10 font-serif mb-6 leading-none font-light">"</div>
+                  {/* 引号 */}
+                  <div className="text-5xl text-gold/10 font-serif mb-4 leading-none font-light">"</div>
                   
-                  <p className="text-lg md:text-xl text-ink/80 leading-relaxed mb-8 transition-all duration-700 font-light">
+                  <p className="text-lg md:text-xl text-ink/80 leading-relaxed mb-8 transition-all duration-700 font-light italic">
                     {testimonials[activeTestimonial].text}
                   </p>
 
@@ -347,8 +392,15 @@ export default function Home() {
                   <p className="text-tea/50 text-xs mt-1">{testimonials[activeTestimonial].date}</p>
                 </div>
 
+                {/* 底部装饰 */}
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <div className="w-8 h-[1px] bg-gold/20" />
+                  <div className="w-1.5 h-1.5 rotate-45 border border-gold/30" />
+                  <div className="w-8 h-[1px] bg-gold/20" />
+                </div>
+
                 {/* 指示点 */}
-                <div className="flex items-center justify-center space-x-3 mt-10">
+                <div className="flex items-center justify-center space-x-3 mt-8">
                   {testimonials.map((_, index) => (
                     <button
                       key={index}
@@ -375,31 +427,52 @@ export default function Home() {
           <div className="absolute top-1/2 left-1/3 w-64 h-64 ink-circle animate-breathe" />
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 ink-circle animate-breathe" style={{ animationDelay: '2s' }} />
         </div>
+        
+        {/* 金箔粒子 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(10)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-[2px] h-[2px] bg-gold/20 rounded-full animate-gold-fall"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * -20}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${8 + Math.random() * 8}s`,
+                opacity: 0.1 + Math.random() * 0.2
+              }}
+            />
+          ))}
+        </div>
+
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
           <div className="mb-10 reveal-scale">
-            <div className="w-16 h-16 mx-auto bg-gold/[0.08] rounded-full flex items-center justify-center border border-gold/[0.15] backdrop-blur-sm">
-              <span className="text-gold font-serif text-2xl">宴</span>
+            <div className="seal w-16 h-16 mx-auto text-lg">
+              宴
             </div>
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-paper mb-6 tracking-wider reveal font-light">
             即刻开启美食之旅
           </h2>
-          <p className="text-paper/40 mb-12 max-w-xl mx-auto leading-relaxed reveal font-light text-sm">
+          <p className="text-paper/40 mb-14 max-w-xl mx-auto leading-relaxed reveal font-light text-sm tracking-wider">
             无论是商务宴请、家庭聚餐还是浪漫约会，<br />
             海源荟都将为您呈现一场难忘的味觉盛宴
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 reveal">
             <Link
               to="/reservation"
-              className="px-10 py-4 bg-paper text-ink rounded-full hover:bg-white transition-all duration-500 tracking-wider text-sm font-medium btn-apple"
+              className="group relative px-10 py-4 overflow-hidden tracking-wider text-sm"
             >
-              立即预约
+              <div className="absolute inset-0 bg-paper group-hover:bg-white transition-colors duration-500 rounded-full" />
+              <span className="relative text-ink font-medium z-10">立即预约</span>
             </Link>
             <Link
               to="/order"
-              className="px-10 py-4 border border-paper/20 text-paper/70 rounded-full hover:border-paper/40 hover:text-paper transition-all duration-500 tracking-wider text-sm btn-apple"
+              className="group relative px-10 py-4 overflow-hidden tracking-wider text-sm"
             >
-              在线点餐
+              <div className="absolute inset-0 rounded-full border border-paper/20 group-hover:border-paper/40 transition-all duration-500" />
+              <div className="absolute inset-0 bg-paper/0 group-hover:bg-paper/[0.05] transition-colors duration-500 rounded-full" />
+              <span className="relative text-paper/70 group-hover:text-paper transition-colors duration-500 z-10">在线点餐</span>
             </Link>
           </div>
         </div>

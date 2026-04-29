@@ -39,6 +39,76 @@ h1, h2, h3, h4 {
   font-family: var(--font-serif);
 }
 
+/* ============ 金箔飘落动画 ============ */
+@keyframes goldFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+.animate-gold-fall {
+  animation: goldFall 8s linear infinite;
+}
+
+/* ============ 宣纸纹理 ============ */
+.paper-texture {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(201, 169, 110, 0.02) 2px,
+      rgba(201, 169, 110, 0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(139, 115, 85, 0.015) 3px,
+      rgba(139, 115, 85, 0.015) 6px
+    );
+}
+
+/* ============ 中式卡片悬停 ============ */
+.card-chinese {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.card-chinese::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.card-chinese:hover::before {
+  border-color: rgba(201, 169, 110, 0.3);
+  box-shadow: 0 0 30px rgba(201, 169, 110, 0.06);
+}
+
+.card-chinese:hover {
+  transform: translateY(-4px);
+}
+
+/* ============ 小印章 ============ */
+.seal-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--color-cinnabar);
+  color: var(--color-cinnabar);
+  font-family: var(--font-serif);
+  padding: 2px 8px;
+  transform: rotate(-2deg);
+  background: rgba(194, 59, 34, 0.05);
+  backdrop-filter: blur(4px);
+}
+
 /* ============ 自定义滚动条 ============ */
 ::-webkit-scrollbar {
   width: 6px;

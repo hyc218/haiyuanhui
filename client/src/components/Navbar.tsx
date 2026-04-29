@@ -5,11 +5,11 @@ import { useUserStore } from '../store/userStore'
 
 const navLinks = [
   { path: '/', label: '首页' },
-  { path: '/menu', label: '菜品展示' },
-  { path: '/order', label: '在线订餐' },
-  { path: '/reservation', label: '预约订座' },
-  { path: '/about', label: '关于我们' },
-  { path: '/contact', label: '联系我们' },
+  { path: '/menu', label: '菜单' },
+  { path: '/order', label: '订餐' },
+  { path: '/reservation', label: '预约' },
+  { path: '/about', label: '关于' },
+  { path: '/contact', label: '联系' },
 ]
 
 export default function Navbar() {
