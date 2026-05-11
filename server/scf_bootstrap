@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+echo "Starting haiyuanhui API server..."
+cd /var/user
+node index.js 2>&1
+echo "Server exited with code $?"

@@ -1,0 +1,48 @@
+{
+  "envId": "haiyuanhui888-d1gim09vk9706a328",
+  "functionRoot": "./server",
+  "functions": [
+    {
+      "name": "api",
+      "runtime": "Nodejs20.19",
+      "timeout": 60,
+      "memorySize": 512,
+      "envVariables": {
+        "JWT_SECRET": "haiyuanhui_secret_key_2024",
+        "DB_PATH": "/tmp/haiyuanhui.db",
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+  "framework": {
+    "plugins": {
+      "api": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {
+          "functionRoot": "./server",
+          "functions": [
+            {
+              "name": "api",
+              "runtime": "Nodejs20.19",
+              "timeout": 60,
+              "memorySize": 512,
+              "envVariables": {
+                "JWT_SECRET": "haiyuanhui_secret_key_2024",
+                "DB_PATH": "/tmp/haiyuanhui.db",
+                "NODE_ENV": "production"
+              },
+              "triggers": [
+                {
+                  "name": "api-gateway",
+                  "type": "http",
+                  "path": "/api",
+                  "methods": ["ANY"]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

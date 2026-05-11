@@ -1,0 +1,35 @@
+name: Deploy Server to CloudBase
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'server/**'
+      - 'cloudbaserc.json'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./server
+
+      - name: Install CloudBase CLI
+        run: npm install -g @cloudbase/cli
+
+      - name: Deploy to CloudBase
+        env:
+          SECRET_ID: ${{ secrets.TC_SECRET_ID }}
+          SECRET_KEY: ${{ secrets.TC_SECRET_KEY }}
+        run: |
+          tcb login --apiKeyId "$SECRET_ID" --apiKey "$SECRET_KEY"
+          tcb fn deploy api --force --path ./server --runtime Nodejs20.19 -e haiyuanhui888-d1gim09vk9706a328

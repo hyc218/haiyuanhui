@@ -1,0 +1,9 @@
+.git
+.gitignore
+*.db
+.env
+.env.local
+*.md
+.cloudbaseignore
+.dockerignore
+Dockerfile
