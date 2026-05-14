@@ -32,4 +32,4 @@ jobs:
           SECRET_KEY: ${{ secrets.TC_SECRET_KEY }}
         run: |
           tcb login --apiKeyId "$SECRET_ID" --apiKey "$SECRET_KEY"
-          tcb fn deploy api --force --path ./server --runtime Nodejs20.19 -e haiyuanhui888-d1gim09vk9706a328
+          tcb fn deploy api --force --dir ./server --runtime Nodejs20.19 -e haiyuanhui888888-d1eqfjyea6385c6

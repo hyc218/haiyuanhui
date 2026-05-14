@@ -1,48 +1,42 @@
 {
-  "envId": "haiyuanhui888-d1gim09vk9706a328",
-  "functionRoot": "./server",
+  "envId": "haiyuanhui888888-d1eqfjyea6385c6",
+  "functionRoot": "./cloudfunctions",
   "functions": [
     {
-      "name": "api",
-      "runtime": "Nodejs20.19",
-      "timeout": 60,
+      "name": "auth",
+      "runtime": "Nodejs16.13",
+      "timeout": 20,
+      "memorySize": 256,
+      "handler": "index.main"
+    },
+    {
+      "name": "menu",
+      "runtime": "Nodejs16.13",
+      "timeout": 120,
       "memorySize": 512,
-      "envVariables": {
-        "JWT_SECRET": "haiyuanhui_secret_key_2024",
-        "DB_PATH": "/tmp/haiyuanhui.db",
-        "NODE_ENV": "production"
-      }
+      "handler": "index.main"
+    },
+    {
+      "name": "order",
+      "runtime": "Nodejs16.13",
+      "timeout": 20,
+      "memorySize": 256,
+      "handler": "index.main"
+    },
+    {
+      "name": "common",
+      "runtime": "Nodejs16.13",
+      "timeout": 20,
+      "memorySize": 256,
+      "handler": "index.main"
+    },
+    {
+      "name": "api",
+      "runtime": "Nodejs16.13",
+      "timeout": 30,
+      "memorySize": 512,
+      "handler": "index.main",
+      "ignore": ["node_modules"]
     }
-  ],
-  "framework": {
-    "plugins": {
-      "api": {
-        "use": "@cloudbase/framework-plugin-function",
-        "inputs": {
-          "functionRoot": "./server",
-          "functions": [
-            {
-              "name": "api",
-              "runtime": "Nodejs20.19",
-              "timeout": 60,
-              "memorySize": 512,
-              "envVariables": {
-                "JWT_SECRET": "haiyuanhui_secret_key_2024",
-                "DB_PATH": "/tmp/haiyuanhui.db",
-                "NODE_ENV": "production"
-              },
-              "triggers": [
-                {
-                  "name": "api-gateway",
-                  "type": "http",
-                  "path": "/api",
-                  "methods": ["ANY"]
-                }
-              ]
-            }
-          ]
-        }
-      }
-    }
-  }
+  ]
 }

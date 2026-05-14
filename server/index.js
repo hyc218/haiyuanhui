@@ -3,6 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
 const { getDb, saveDb } = require('./db/database');
 const serverless = require('serverless-http');
 
@@ -12,6 +15,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'haiyuanhui_secret_key_2024';
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static images (仅本地开发)
+app.use('/images', express.static(path.join(__dirname, 'static/images')));
+
+// 菜品图片（文件名均为英文，无中文URL编码问题）
+app.use('/api/images', express.static(path.join(__dirname, 'static/images')));
 
 // ============ Auth Middleware ============
 function authMiddleware(req, res, next) {
@@ -93,12 +102,14 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
 });
 
 // ============ Menu Routes ============
-// Helper: resolve relative image URLs to absolute
+// Helper: resolve image URLs
+// cloud:// fileID 直接返回，由小程序端用 getTempFileURL() 转换为临时链接
 function resolveImageUrl(url, baseUrl) {
-  if (url && url.startsWith('/')) {
-    return `${baseUrl}${url}`;
-  }
-  return url || '';
+  if (!url) return '';
+  if (url.startsWith('cloud://')) return url; // 返回原始 fileID，小程序端转换
+  if (url.startsWith('http')) return url;
+  if (url.startsWith('/')) return `${baseUrl}${url}`;
+  return url;
 }
 
 app.get('/api/menu', (req, res) => {
@@ -395,21 +406,104 @@ app.delete('/api/admin/menu/:id', authMiddleware, (req, res) => {
   });
 });
 
-// ============ Placeholder Image (replace picsum.photos) ============
+// ============ Admin: 获取所有菜品（含下架） ============
+app.get('/api/admin/menu/all', authMiddleware, (req, res) => {
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  getDb().then(db => {
+    const result = db.exec('SELECT * FROM menu_items ORDER BY sort_order, id');
+    if (result.length === 0) return res.json([]);
+
+    const items = result[0].values.map(row => ({
+      id: row[0], name: row[1], nameEn: row[2], category: row[3], price: row[4],
+      description: row[5], image: resolveImageUrl(row[6], baseUrl), emoji: row[7],
+      spicy: row[8] === 1, recommended: row[9] === 1, available: row[10] === 1
+    }));
+    res.json(items);
+  });
+});
+
+// ============ Admin: 图片上传 ============
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('只能上传图片文件'));
+  }
+});
+
+app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: '请选择图片' });
+
+    const ext = req.file.mimetype.split('/')[1] === 'png' ? 'png' : 'jpg';
+    const cloudPath = `menu/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+    const { storage } = require('./cloudbase');
+    await storage.uploadFile({
+      cloudPath,
+      fileContent: req.file.buffer,
+    });
+
+    // TODO: 将 xxxx 替换为实际存储 bucket ID（登录云开发控制台查看）
+    const fileID = `cloud://haiyuanhui888888-d1eqfjyea6385c6.xxxx/${cloudPath}`;
+    res.json({ fileID, cloudPath });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: '图片上传失败: ' + err.message });
+  }
+});
+
+// ============ Admin: 删除图片 ============
+app.delete('/api/admin/upload', authMiddleware, async (req, res) => {
+  try {
+    const { cloudPath } = req.body;
+    if (!cloudPath) return res.status(400).json({ error: '请提供文件路径' });
+
+    const { storage } = require('./cloudbase');
+    await storage.deleteFile([cloudPath]);
+    res.json({ message: '图片已删除' });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ error: '图片删除失败' });
+  }
+});
+
+// ============ Placeholder Image ============
+const placeholderDir = path.join(__dirname, 'static');
+
 app.get('/api/placeholder', (req, res) => {
-  const { text = '菜', color = 'c9a96e' } = req.query;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
-    <rect width="600" height="400" fill="#f5f0eb"/>
-    <rect x="50" y="50" width="500" height="300" rx="12" fill="#faf8f5" stroke="#e8ddd0" stroke-width="2"/>
-    <text x="300" y="220" font-size="120" text-anchor="middle" fill="#${color}" font-family="serif">${text}</text>
-  </svg>`;
-  res.setHeader('Content-Type', 'image/svg+xml');
-  res.setHeader('Cache-Control', 'public, max-age=86400');
-  res.send(svg);
+  try {
+    const text = req.query.text || '菜';
+    // 只取第一个字符作为文件名
+    const char = String(text).charAt(0);
+    const filePath = path.join(placeholderDir, `${char}.png`);
+
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      fs.createReadStream(filePath).pipe(res);
+    } else {
+      // 回退：返回默认占位图
+      const fallback = path.join(placeholderDir, '菜.png');
+      if (fs.existsSync(fallback)) {
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        fs.createReadStream(fallback).pipe(res);
+      } else {
+        res.status(404).json({ error: '占位图不存在' });
+      }
+    }
+  } catch (e) {
+    console.error('placeholder error:', e);
+    res.status(500).json({ error: '图片生成失败' });
+  }
 });
 
 // ============ CloudBase 云函数入口 ============
-exports.main = serverless(app);
+exports.main = serverless(app, {
+  binary: ['image/*', 'application/octet-stream'],
+});
 
 // ============ 本地开发启动 ============
 if (process.env.NODE_ENV !== 'production') {
